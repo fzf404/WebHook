@@ -14,12 +14,14 @@ const (
 	blogPath = "/blog"
 	notePath = "/note"
 	homePath = "/home"
+	taboxPath = "/tabox"
 )
 
 func main() {
 	blogHook, _ := github.New(github.Options.Secret("blog"))
 	noteHook, _ := github.New(github.Options.Secret("note"))
 	homeHook, _ := github.New(github.Options.Secret("home"))
+	taboxHook, _ := github.New(github.Options.Secret("tabox"))
 
 	// blog
 	http.HandleFunc(blogPath, func(w http.ResponseWriter, r *http.Request) {
@@ -83,6 +85,29 @@ func main() {
 			log.Print(payload.(github.PushPayload).HeadCommit.Message)
 			// 执行命令
 			cmd := exec.Command("/bin/bash", "/opt/webhooks/shell/home.sh")
+			stdout, _ := cmd.StdoutPipe()
+			cmd.Start()
+			bytes, _ := ioutil.ReadAll(stdout)
+			log.Print("Run: ", string(bytes))
+		}
+	})
+
+	// tabox
+	http.HandleFunc(taboxPath, func(w http.ResponseWriter, r *http.Request) {
+		payload, err := taboxHook.Parse(r, github.PushEvent)
+		if err != nil {
+			if err == github.ErrEventNotFound {
+				log.Print("🚨: Tabox Not Push Event")
+				return
+			}
+		}
+		log.Print("🚨: In Tabox")
+		switch payload.(type) {
+		case github.PushPayload:
+			// 获得Message
+			log.Print(payload.(github.PushPayload).HeadCommit.Message)
+			// 执行命令
+			cmd := exec.Command("/bin/bash", "/opt/webhooks/shell/tabox.sh")
 			stdout, _ := cmd.StdoutPipe()
 			cmd.Start()
 			bytes, _ := ioutil.ReadAll(stdout)
