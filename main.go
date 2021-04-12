@@ -40,7 +40,7 @@ func main() {
 				// 获得Message
 				log.Print(payload.HeadCommit.Message)
 				// 执行命令
-				cmd := exec.Command(runCmd)
+				cmd := exec.Command("/bin/bash",runCmd)
 				stdout, _ := cmd.StdoutPipe()
 				cmd.Start()
 				bytes, _ := ioutil.ReadAll(stdout)
