@@ -4,116 +4,50 @@ import (
 	"io/ioutil"
 	"log"
 	"os/exec"
+	"webhooks/config"
 
 	"net/http"
 
+	"github.com/spf13/viper"
 	"gopkg.in/go-playground/webhooks.v5/github"
 )
 
-const (
-	blogPath = "/blog"
-	notePath = "/note"
-	homePath = "/home"
-	taboxPath = "/tabox"
-)
-
 func main() {
-	blogHook, _ := github.New(github.Options.Secret("blog"))
-	noteHook, _ := github.New(github.Options.Secret("note"))
-	homeHook, _ := github.New(github.Options.Secret("home"))
-	taboxHook, _ := github.New(github.Options.Secret("tabox"))
+	// 初始化配置文件
+	config.InitConfig()
+	// 批量初始化
+	for _, name := range viper.GetStringSlice("list") {
 
-	// blog
-	http.HandleFunc(blogPath, func(w http.ResponseWriter, r *http.Request) {
-		payload, err := blogHook.Parse(r, github.PushEvent)
-		if err != nil {
-			if err == github.ErrEventNotFound {
-				log.Print("🚨: Blog Not Push Event")
-				return
+		secret := viper.GetString(name + ".secret")
+		hookUrl := viper.GetString(name + ".url")
+		runCmd := viper.GetString(name + ".cmd")
+		pushLog := viper.GetString(name + ".push")
+		undefineLog := viper.GetString(name + ".undefine")
+
+		secretInit, _ := github.New(github.Options.Secret(secret))
+		// 定义处理函数
+		http.HandleFunc(hookUrl, func(w http.ResponseWriter, r *http.Request) {
+			payload, err := secretInit.Parse(r, github.PushEvent)
+			if err != nil {
+				if err == github.ErrEventNotFound {
+					log.Print(undefineLog)
+					return
+				}
 			}
-		}
-		log.Print("🚨: In Blog")
-		switch payload.(type) {
-		case github.PushPayload:
-			// 获得Message
-			log.Print(payload.(github.PushPayload).HeadCommit.Message)
-			// 执行命令
-			cmd := exec.Command("/bin/bash", "/opt/webhooks/shell/blog.sh")
-			stdout, _ := cmd.StdoutPipe()
-			cmd.Start()
-			bytes, _ := ioutil.ReadAll(stdout)
-			log.Print("Run: ", string(bytes))
-		}
-	})
-
-	// note
-	http.HandleFunc(notePath, func(w http.ResponseWriter, r *http.Request) {
-		payload, err := noteHook.Parse(r, github.PushEvent)
-		if err != nil {
-			if err == github.ErrEventNotFound {
-				log.Print("🚨: Note Not Push Event")
-				return
+			log.Print(pushLog)
+			switch payload := payload.(type) {
+			case github.PushPayload:
+				// 获得Message
+				log.Print(payload.HeadCommit.Message)
+				// 执行命令
+				cmd := exec.Command(runCmd)
+				stdout, _ := cmd.StdoutPipe()
+				cmd.Start()
+				bytes, _ := ioutil.ReadAll(stdout)
+				log.Print("Run: ", string(bytes))
 			}
-		}
-		log.Print("🚨: In Note")
-		switch payload.(type) {
-		case github.PushPayload:
-			// 获得Message
-			log.Print(payload.(github.PushPayload).HeadCommit.Message)
-			// 执行命令
-			cmd := exec.Command("/bin/bash", "/opt/webhooks/shell/note.sh")
-			stdout, _ := cmd.StdoutPipe()
-			cmd.Start()
-			bytes, _ := ioutil.ReadAll(stdout)
-			log.Print("Run: ", string(bytes))
-		}
-	})
-
-	// home
-	http.HandleFunc(homePath, func(w http.ResponseWriter, r *http.Request) {
-		payload, err := homeHook.Parse(r, github.PushEvent)
-		if err != nil {
-			if err == github.ErrEventNotFound {
-				log.Print("🚨: Home Not Push Event")
-				return
-			}
-		}
-		log.Print("🚨: In Home")
-		switch payload.(type) {
-		case github.PushPayload:
-			// 获得Message
-			log.Print(payload.(github.PushPayload).HeadCommit.Message)
-			// 执行命令
-			cmd := exec.Command("/bin/bash", "/opt/webhooks/shell/home.sh")
-			stdout, _ := cmd.StdoutPipe()
-			cmd.Start()
-			bytes, _ := ioutil.ReadAll(stdout)
-			log.Print("Run: ", string(bytes))
-		}
-	})
-
-	// tabox
-	http.HandleFunc(taboxPath, func(w http.ResponseWriter, r *http.Request) {
-		payload, err := taboxHook.Parse(r, github.PushEvent)
-		if err != nil {
-			if err == github.ErrEventNotFound {
-				log.Print("🚨: Tabox Not Push Event")
-				return
-			}
-		}
-		log.Print("🚨: In Tabox")
-		switch payload.(type) {
-		case github.PushPayload:
-			// 获得Message
-			log.Print(payload.(github.PushPayload).HeadCommit.Message)
-			// 执行命令
-			cmd := exec.Command("/bin/bash", "/opt/webhooks/shell/tabox.sh")
-			stdout, _ := cmd.StdoutPipe()
-			cmd.Start()
-			bytes, _ := ioutil.ReadAll(stdout)
-			log.Print("Run: ", string(bytes))
-		}
-	})
-
+		})
+		log.Print(name, ": 初始化完成")
+	}
 	http.ListenAndServe(":3000", nil)
 }
