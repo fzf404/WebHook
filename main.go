@@ -40,14 +40,21 @@ func main() {
 				// 获得Message
 				log.Print(payload.HeadCommit.Message)
 				// 执行命令
-				cmd := exec.Command("/bin/bash",runCmd)
-				stdout, _ := cmd.StdoutPipe()
-				cmd.Start()
-				bytes, _ := ioutil.ReadAll(stdout)
-				log.Print("Run: ", string(bytes))
+				go shellRunner(runCmd)
 			}
 		})
 		log.Print(name, ": 初始化完成")
 	}
 	http.ListenAndServe(":3000", nil)
+}
+
+func shellRunner(runCmd string) {
+	cmd := exec.Command("/bin/bash", runCmd)
+	stdout, _ := cmd.StdoutPipe()
+	err := cmd.Start()
+	if err != nil {
+		log.Fatal("🚨Shell脚本执行错误")
+	}
+	bytes, _ := ioutil.ReadAll(stdout)
+	log.Print("Run: ", string(bytes))
 }
