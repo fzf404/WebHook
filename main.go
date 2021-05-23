@@ -23,24 +23,30 @@ func main() {
 		runCmd := viper.GetString(name + ".cmd")
 		pushLog := viper.GetString(name + ".push")
 		undefineLog := viper.GetString(name + ".undefine")
+		gitee := viper.GetBool(name + ".gitee")
 
 		secretInit, _ := github.New(github.Options.Secret(secret))
 		// 定义处理函数
 		http.HandleFunc(hookUrl, func(w http.ResponseWriter, r *http.Request) {
-			payload, err := secretInit.Parse(r, github.PushEvent)
-			if err != nil {
-				if err == github.ErrEventNotFound {
-					log.Print(undefineLog)
+			if gitee {
+				log.Print(pushLog)
+				go shellRunner(runCmd)
+			} else {
+				payload, err := secretInit.Parse(r, github.PushEvent)
+				if err != nil {
+					log.Print("🚨 Secret Error")
 					return
 				}
-			}
-			log.Print(pushLog)
-			switch payload := payload.(type) {
-			case github.PushPayload:
-				// 获得Message
-				log.Print(payload.HeadCommit.Message)
-				// 执行命令
-				go shellRunner(runCmd)
+				log.Print(pushLog)
+				switch payload := payload.(type) {
+				case github.PushPayload:
+					// 获得Message
+					log.Print(payload.HeadCommit.Message)
+					// 执行命令
+					go shellRunner(runCmd)
+				default:
+					log.Print(undefineLog)
+				}
 			}
 		})
 		log.Print(name, ": 初始化完成")
