@@ -8,28 +8,12 @@ blog:
   secret: blog # WebHooks 密钥
   url: /blog # WebHooks URL
   cmd: ./shell/blog.sh # 执行文件名
-  push: 🚨 In Blog    # 接收到push事件输出
-  undefine: 🚨 Blog Undefine Event # 接收到未定义事件的输出
 
 note:
   secret: note # WebHooks 密钥
-  url: /note # WebHooks URL
-  cmd: ./shell/note.sh # 执行文件名
-  push: 🚨 In Note    # 接收到push事件输出
-  undefine: 🚨 Note Undefine Event # 接收到未定义事件的输出
 
 home:
   secret: home # WebHooks 密钥
-  url: /home # WebHooks URL
-  cmd: ./shell/home.sh # 执行文件名
-  push: 🚨 In Home    # 接收到push事件输出
-  undefine: 🚨 Home Undefine Event # 接收到未定义事件的输出
 
 tabox:
   secret: tabox # WebHooks 密钥
-  url: /tabox # WebHooks URL
-  cmd: ./shell/tabox.sh # 执行文件名
-  push: 🚨 In Tabox    # 接收到push事件输出
-  undefine: 🚨 Tabox Undefine Event # 接收到未定义事件的输出
-
-

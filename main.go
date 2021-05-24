@@ -19,25 +19,32 @@ func main() {
 	for _, name := range viper.GetStringSlice("list") {
 
 		secret := viper.GetString(name + ".secret")
+
 		hookUrl := viper.GetString(name + ".url")
+		if hookUrl == "" {
+			hookUrl = "/" + name
+		}
+
 		runCmd := viper.GetString(name + ".cmd")
-		pushLog := viper.GetString(name + ".push")
-		undefineLog := viper.GetString(name + ".undefine")
+		if runCmd == "" {
+			runCmd = "./shell/" + name + ".sh"
+		}
+
 		gitee := viper.GetBool(name + ".gitee")
 
 		secretInit, _ := github.New(github.Options.Secret(secret))
 		// 定义处理函数
 		http.HandleFunc(hookUrl, func(w http.ResponseWriter, r *http.Request) {
 			if gitee {
-				log.Print(pushLog)
+				log.Print("🚨 In ", name)
 				go shellRunner(runCmd)
 			} else {
+				log.Print("🚨 In ", name)
 				payload, err := secretInit.Parse(r, github.PushEvent)
 				if err != nil {
 					log.Print("🚨 Secret Error")
 					return
 				}
-				log.Print(pushLog)
 				switch payload := payload.(type) {
 				case github.PushPayload:
 					// 获得Message
@@ -45,7 +52,7 @@ func main() {
 					// 执行命令
 					go shellRunner(runCmd)
 				default:
-					log.Print(undefineLog)
+					log.Print("🚨 Undefine Event")
 				}
 			}
 		})
