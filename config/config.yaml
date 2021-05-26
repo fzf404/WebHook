@@ -1,19 +1,16 @@
+port: 3000  # 端口
+
 list:
   - blog
   - note
   - home
   - tabox
+  - fzf
 
 blog:
-  secret: blog # WebHooks 密钥
-  url: /blog # WebHooks URL
-  cmd: ./shell/blog.sh # 执行文件名
+  secret: blog  # WebHooks 密钥
+  url: /blog    # WebHooks URL
+  cmd: ./shell/blog.sh  # 执行文件名
 
-note:
-  secret: note # WebHooks 密钥
-
-home:
-  secret: home # WebHooks 密钥
-
-tabox:
-  secret: tabox # WebHooks 密钥
+# note: 
+  # secret、url、cmd与name一样时，只需在list中配置
