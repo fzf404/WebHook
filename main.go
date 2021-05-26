@@ -15,10 +15,16 @@ import (
 func main() {
 	// 初始化配置文件
 	config.InitConfig()
+	port := ":" + viper.GetString("port")
 	// 批量初始化
 	for _, name := range viper.GetStringSlice("list") {
 
+		name := name
+
 		secret := viper.GetString(name + ".secret")
+		if secret == "" {
+			secret = name
+		}
 
 		hookUrl := viper.GetString(name + ".url")
 		if hookUrl == "" {
@@ -30,35 +36,40 @@ func main() {
 			runCmd = "./shell/" + name + ".sh"
 		}
 
-		gitee := viper.GetBool(name + ".gitee")
-
 		secretInit, _ := github.New(github.Options.Secret(secret))
 		// 定义处理函数
 		http.HandleFunc(hookUrl, func(w http.ResponseWriter, r *http.Request) {
-			if gitee {
+			// 判断是否为Gitee请求
+			if r.Header["User-Agent"][0] == "git-oschina-hook" {
 				log.Print("🚨 In ", name)
-				go shellRunner(runCmd)
-			} else {
-				log.Print("🚨 In ", name)
-				payload, err := secretInit.Parse(r, github.PushEvent)
-				if err != nil {
-					log.Print("🚨 Secret Error")
+				if r.Header["X-Gitee-Token"][0] != "fzf" {
+					log.Print("🚨 Gitee Secret Error")
 					return
 				}
-				switch payload := payload.(type) {
-				case github.PushPayload:
-					// 获得Message
-					log.Print(payload.HeadCommit.Message)
-					// 执行命令
-					go shellRunner(runCmd)
-				default:
-					log.Print("🚨 Undefine Event")
-				}
+				go shellRunner(runCmd)
+				return
 			}
+			// Github请求处理
+			log.Print("🚨 In ", name)
+			payload, err := secretInit.Parse(r, github.PushEvent)
+			if err != nil {
+				log.Print("🚨 Github Secret Error")
+				return
+			}
+			switch payload := payload.(type) {
+			case github.PushPayload:
+				// 获得Message
+				log.Print(payload.HeadCommit.Message)
+				// 执行命令
+				go shellRunner(runCmd)
+			default:
+				log.Print("🚨 Undefine Event")
+			}
+
 		})
 		log.Print(name, ": 初始化完成")
 	}
-	http.ListenAndServe(":3000", nil)
+	http.ListenAndServe(port, nil)
 }
 
 func shellRunner(runCmd string) {
