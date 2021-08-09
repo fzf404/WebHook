@@ -1,3 +1,4 @@
 #!/bin/bash 
-cd /www/wwwroot/blog.fzf404.top
+cd /www/website/blog.fzf404.top
 git pull
+git reset --hard FETCH_HEAD
