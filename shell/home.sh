@@ -1,3 +1,3 @@
 #!/bin/bash 
-cd /www/wwwroot/fzf404.top
+cd /www/website/fzf404.top
 git pull

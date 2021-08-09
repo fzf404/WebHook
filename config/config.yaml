@@ -1,16 +1,18 @@
 port: 3000  # 端口
 
+log: ./log/  # 日志信息位置
+
+# 需要执行的列表
+# name、secret、url与cmd一样时，只需在list中配置
 list:
   - blog
   - note
   - home
   - tabox
-  - fzf
-
+  - share
+  
+# 自定义示例
 blog:
   secret: blog  # WebHooks 密钥
   url: /blog    # WebHooks URL
   cmd: ./shell/blog.sh  # 执行文件名
-
-# note: 
-  # secret、url、cmd与name一样时，只需在list中配置
