@@ -7,16 +7,7 @@ import (
 
 func PathExists(path string) bool {
 	_, err := os.Stat(path)
-	if err == nil {
-		return true
-	}
-	if os.IsNotExist(err) {
-		return false
-	} else {
-		log.Print("🚨 Create Log File Success: ", path, err.Error())
-		log.Fatal("🚨 Can't Read Log Path:", path, err.Error())
-		return false
-	}
+	return err == nil
 }
 
 func AutoMkdir(path string) {
@@ -24,10 +15,9 @@ func AutoMkdir(path string) {
 	if !exist {
 		err := os.MkdirAll(path, os.ModePerm)
 		if err != nil {
-			log.Fatal("🚨 Create Log File Failed: ", path, err.Error())
+			log.Fatal("🚨 Create Log File Failed: ", err.Error())
 		} else {
-			log.Print("🚨 Create Log File Success: ", path, err.Error())
+			log.Print("🚨 Create Log File Success")
 		}
-
 	}
 }
