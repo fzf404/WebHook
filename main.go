@@ -9,6 +9,7 @@ import (
 	"strings"
 	"webhooks/config"
 	"webhooks/shell"
+	"webhooks/utils"
 
 	"net/http"
 )
@@ -50,7 +51,10 @@ func init() {
 				shellPath = tmp
 			}
 		}
-
+		if !utils.PathExists(shellPath){
+			log.Fatal("🚨 Shell Script Not Exist: ", shellPath)
+		}
+		
 		// 处理函数
 		http.HandleFunc(hookUrl, func(w http.ResponseWriter, r *http.Request) {
 			// 请求处理
