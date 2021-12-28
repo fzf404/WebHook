@@ -48,7 +48,7 @@ webhooks/
 └── webhooks
 ```
 
-### 编译好的程序
+### 搭建
 
 ```bash
 # 1. 下载 relase 中的文件
