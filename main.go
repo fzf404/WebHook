@@ -21,17 +21,17 @@ func init() {
 	// 初始化Loger文件
 	succLoger, errLoger, configMap := config.InitLog()
 	// 获得端口
-	port,succ = configMap["port"].(string)
-	if !succ {  
+	port, succ = configMap["port"].(string)
+	if !succ {
 		log.Fatal("🚨 Read `config.yaml` Error: port")
 	}
 	// 获得列表
-	list,succ := configMap["list"].([]interface{})
-	if !succ {  
+	list, succ := configMap["list"].([]interface{})
+	if !succ {
 		log.Fatal("🚨 Read `config.yaml` Error: list")
 	}
 	// 批量初始化监听
-	for _, name := range list{
+	for _, name := range list {
 		name := name.(string)
 		secret := name
 		hookUrl := "/" + name
@@ -51,12 +51,15 @@ func init() {
 				shellPath = tmp
 			}
 		}
-		if !utils.PathExists(shellPath){
+		if !utils.PathExists(shellPath) {
 			log.Fatal("🚨 Shell Script Not Exist: ", shellPath)
 		}
-		
+
 		// 处理函数
 		http.HandleFunc(hookUrl, func(w http.ResponseWriter, r *http.Request) {
+			// 调试
+			// fmt.Println(r.Header)
+			// fmt.Println(r.Body)
 			// 请求处理
 			log.Print("🚀 In ", name)
 			succLoger.Print("🚀 In ", name)
@@ -72,16 +75,16 @@ func init() {
 				_, _ = mac.Write(payload)
 				expectedMAC := hex.EncodeToString(mac.Sum(nil))
 				if !hmac.Equal([]byte(signature[5:]), []byte(expectedMAC)) {
-					log.Print("🚨 Github Secret Eroror")
+					log.Print("🚨 Github Secret Error")
 					errLoger.Print("🚨 In ", name, ": Github Secret Error.")
 					return
 				}
 				// Event验证
 				switch r.Header.Get("X-Github-Event") {
-				case "push":
 				case "ping":
-					log.Print("🍻 Ping")	
-					return 
+					log.Print("🍻 Ping")
+					return
+				case "push":
 				default:
 					log.Print("🚨 Github Method Error")
 					errLoger.Print("🚨 In ", name, ": Github Method Error.")
@@ -103,7 +106,35 @@ func init() {
 					errLoger.Print("🚨 In ", name, ": Gitee Method Error.")
 					return
 				}
+			// Coding
+			case strings.Contains(userAgent, "Coding.net"):
+				// 密钥验证
+				signature := r.Header.Get("X-Coding-Signature")
+				mac := hmac.New(sha1.New, []byte(secret))
+				payload, _ := ioutil.ReadAll(r.Body)
+				_, _ = mac.Write(payload)
+				expectedMAC := hex.EncodeToString(mac.Sum(nil))
+				if !hmac.Equal([]byte(signature[5:]), []byte(expectedMAC)) {
+					log.Print("🚨 Coding Secret Error")
+					errLoger.Print("🚨 In ", name, ": Coding Secret Error.")
+					return
+				}
+				// Event 验证
+				switch r.Header.Get("X-Coding-Event") {
+				case "ping":
+					log.Print("🍻 Ping")
+					return
+				case "push":
+				default:
+					log.Print("🚨 Coding Method Error")
+					errLoger.Print("🚨 In ", name, ": Goding Method Error.")
+					return
+				}
 
+			default:
+				log.Print("🚨 Platform Not Support")
+				errLoger.Print("🚨 In ", name, ": Platform Not Support")
+				return
 			}
 			// 运行 Shell 脚本
 			go shell.ShellRunner(shellPath, succLoger, errLoger)
