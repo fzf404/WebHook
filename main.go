@@ -147,5 +147,8 @@ func init() {
 	// 开启服务
 }
 func main() {
-	http.ListenAndServe(port, nil)
+	err := http.ListenAndServe(port, nil)
+	if err != nil {
+		log.Print("🚨 Port",port," Already in Use")
+	}
 }
