@@ -55,9 +55,9 @@ webhooks/
 
 cd /opt
 # 下载 Releases
-wget https://github.com/fzf404/GoWebHooks/releases/download/v2.2/webhooks.tar.gz
+wget https://github.com/fzf404/GoWebHooks/releases/download/v2.3/webhooks.tar.gz
 # 国内加速下载
-wget https://hub.fastgit.org/fzf404/GoWebHooks/releases/download/v2.2/webhooks.tar.gz
+wget https://hub.fastgit.xyz/fzf404/GoWebHooks/releases/download/v2.3/webhooks.tar.gz
 
 # 2. 解压
 
