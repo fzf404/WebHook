@@ -38,11 +38,15 @@ func ShellRunner(shellPath string, succLoger *log.Logger, errLoger *log.Logger, 
 	if len(errbytes) != 0 {
 		log.Print("🚨 Shell Run Error.")
 		errLoger.Print("🚨 Shell Run Error: ", string(errbytes))
-		mail.SendMail(MAIL_SUBJECT_FAILURE, "🚨 Shell Run Error: "+string(errbytes))
+		if mailEnable {
+			mail.SendMail(MAIL_SUBJECT_FAILURE, "🚨 Shell Run Error: "+string(errbytes))
+		}
 		return
 	}
 
 	log.Print("👍 Shell Run Success.")
 	succLoger.Print("👍 Shell Run Success: ", string(bytes))
-	mail.SendMail(MAIL_SUBJECT_SUCCESS, "👍 Shell Run Success: "+string(bytes))
+	if mailEnable {
+		mail.SendMail(MAIL_SUBJECT_SUCCESS, "👍 Shell Run Success: "+string(bytes))
+	}
 }
