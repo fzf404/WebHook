@@ -32,7 +32,7 @@ func init() {
 		log.Fatal("🚨 Read `config.yaml` Error: list")
 	}
 	// 邮件服务配置
-	mailConfig, succ := configMap["mail"].(map[string]interface{})
+	mailConfig, succ := configMap["mail"].(map[interface{}]interface{})
 	if !succ {
 		log.Fatal("🚨 Read `config.yaml` Error: mail")
 	}
