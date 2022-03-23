@@ -61,7 +61,10 @@ func init() {
 			mailPass = tmp.(string)
 		}
 		if tmp, succ := mailConfig["to"]; succ {
-			mailTo = tmp.([]string)
+			toList := tmp.([]interface{})
+			for _, to := range toList {
+				mailTo = append(mailTo, to.(string))
+			}
 		}
 		mail.InitMailService(mailHost, mailPort, mailUser, mailPass, mailTo)
 	}
