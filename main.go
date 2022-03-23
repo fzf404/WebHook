@@ -8,6 +8,7 @@ import (
 	"log"
 	"strings"
 	"webhooks/config"
+	"webhooks/mail"
 	"webhooks/shell"
 	"webhooks/utils"
 
@@ -30,8 +31,50 @@ func init() {
 	if !succ {
 		log.Fatal("🚨 Read `config.yaml` Error: list")
 	}
+	// 邮件服务配置
+	mailConfig, succ := configMap["mail"].(map[interface{}]interface{})
+	if !succ {
+		log.Fatal("🚨 Read `config.yaml` Error: mail")
+	}
+	// 检查是否开启邮件服务
+	mailEnable := false
+	if tmp, succ := mailConfig["enable"]; succ {
+		mailEnable = tmp.(bool)
+	}
+	// 初始化邮件服务
+	if mailEnable {
+		mailHost := "smtp.mail.com"
+		mailPort := 25
+		mailUser := "account@gmail.com"
+		mailPass := "123abc"
+		mailTo := []string{}
+		if tmp, succ := mailConfig["host"]; succ {
+			mailHost = tmp.(string)
+		}
+		if tmp, succ := mailConfig["port"]; succ {
+			mailPort = tmp.(int)
+		}
+		if tmp, succ := mailConfig["user"]; succ {
+			mailUser = tmp.(string)
+		}
+		if tmp, succ := mailConfig["pass"]; succ {
+			mailPass = tmp.(string)
+		}
+		if tmp, succ := mailConfig["to"]; succ {
+			toList := tmp.([]interface{})
+			for _, to := range toList {
+				mailTo = append(mailTo, to.(string))
+			}
+		}
+		mail.InitMailService(mailHost, mailPort, mailUser, mailPass, mailTo)
+	}
+
 	// 批量初始化监听
 	for _, name := range list {
+		// 应该不会有人真的把 mail 填入服务列表吧
+		if name == "mail" {
+			continue
+		}
 		name := name.(string)
 		secret := name
 		hookUrl := "/" + name
@@ -137,7 +180,7 @@ func init() {
 				return
 			}
 			// 运行 Shell 脚本
-			go shell.ShellRunner(shellPath, succLoger, errLoger)
+			go shell.ShellRunner(shellPath, succLoger, errLoger, mailEnable)
 
 		})
 		// 初始化成功
@@ -149,6 +192,6 @@ func init() {
 func main() {
 	err := http.ListenAndServe(port, nil)
 	if err != nil {
-		log.Print("🚨 Port",port," Already in Use")
+		log.Print("🚨 Port", port, " Already in Use")
 	}
 }

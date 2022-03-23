@@ -14,3 +14,14 @@ demo:
   secret: fzf404  # WebHooks 密钥
   url: /demo    # WebHooks URL
   cmd: ./shell/demo.sh  # 执行shell的文件名
+
+# 邮件服务
+mail:
+  enable: false
+  host: smtp.gmail.com
+  port: 25
+  user: account@gmail.com
+  pass: 123abc
+  to:
+    - user1@example.com
+    - user2@example.com
