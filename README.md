@@ -3,6 +3,8 @@
 > 一个通过配置 yaml 文件的 webhooks 部署脚本
 >
 > 支持 Github、Gitee、Coding
+>
+> 并且提供了邮件提醒功能
 
 ## 什么是 webhooks?
 
@@ -24,6 +26,8 @@
 
 你读了本项目的`README.md`, 使用本项目完成了前端的需求!
 
+> 为了防止部署失败而当事人不之情，于是增加了邮件提醒功能！
+
 > 详见`example`文件夹
 
 ## 使用
@@ -32,7 +36,7 @@
 
 > coding 请将 `Secret` 配置在 `签名令牌` 中
 >
-> Giiee 请将 `Secret` 配置在 `WebHook 密码` 中
+> Gitee 请将 `Secret` 配置在 `WebHook 密码` 中
 
 ### 文件说明
 
@@ -44,7 +48,8 @@ webhooks/
 │   ├── error.log
 │   └── success.log
 ├── shell # shell 脚本默认保存位置
-│   └── demo.sh
+│   └── static.sh # 静态文件示例 shell 脚本
+│   └── vue.sh # vue 打包示例 shell 脚本
 └── webhooks
 ```
 
@@ -52,20 +57,17 @@ webhooks/
 
 ```bash
 # 1. 下载 relase 中的文件
-
 cd /opt
 # 下载 Releases
-wget https://github.com/fzf404/GoWebHooks/releases/download/v2.3/webhooks.tar.gz
+wget https://github.com/fzf404/GoWebHooks/releases/download/v2.4/webhooks.tar.gz
 # 国内加速下载
-wget https://hub.fastgit.xyz/fzf404/GoWebHooks/releases/download/v2.3/webhooks.tar.gz
+wget https://hub.fastgit.xyz/fzf404/GoWebHooks/releases/download/v2.4/webhooks.tar.gz
 
 # 2. 解压
-
 tar -zxvf webhooks.tar.gz
 mv example webhooks
 
 # 3. 编辑配置文件
-
 cd webhooks
 # hooks 配置文件
 vim config/config.yaml # 配置文件中的说明很详细
@@ -76,11 +78,10 @@ vim shell/test.sh
 echo "hello"
 
 # 4. 运行
-
 chmod +x ./webhooks
 ./webhooks
-
 # 如下输出则为运行成功
+2022/03/26 14:56:28 🚨 Create Log File Success
 2021/12/12 21:31:16 🆕 demo: Init Success.
 2021/12/12 21:31:16 🆕 test: Init Success.
 ```

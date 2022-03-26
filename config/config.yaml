@@ -6,22 +6,22 @@ log: ./log/
 
 # 需要执行 hooks 的列表
 list:
-  - demo # 服务名 (随便设置, 下方的详细配置要和这里一致)
-  - test # 第二个服务, 假如下方未配置, secret、url、cmd 默认与服务名一致
+  - static # 服务名 (随便设置, 下方的详细配置要和这里一致)
+  - home # 第二个服务, 假如下方未配置, secret、url、cmd 默认与服务名一致
 
 # 配置 hooks
-demo:
+home:
   secret: fzf404  # WebHooks 密钥
-  url: /demo    # WebHooks URL
-  cmd: ./shell/demo.sh  # 执行shell的文件名
+  url: /vue    # WebHooks URL
+  cmd: ./shell/vue.sh  # 执行 shell 的文件名
 
 # 邮件服务
 mail:
-  enable: false
-  host: smtp.gmail.com
-  port: 25
-  user: account@gmail.com
-  pass: 123abc
-  to:
+  enable: false # 是否开启
+  host: smtp.gmail.com # smtp 地址
+  port: 25 # smtp 端口
+  user: account@gmail.com # 发送方邮箱
+  pass: 123abc # 发送方密码
+  to: # 接收邮件的用户
     - user1@example.com
     - user2@example.com
