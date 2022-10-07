@@ -40,8 +40,25 @@
 
 > ”欸，这个项目好像不错，那就用这个吧！“
 
-就这样本项目多了一个 star。
+就这样本项目多了一个 star
 
 ## 快速开始
 
 > 正在筹划 cli 的版本，可以直接使用命令行来部署，敬请期待！
+
+```bash
+# 1. 下载 Release
+wget https://github.com/fzf404/WebHooks/releases/download/v1.0.0/webhooks.tar.gz
+
+# 2. 解压
+tar -zxvf webhooks.tar.gz
+
+# 3. 进入目录
+cd webhooks
+
+# 4. 运行
+./webhooks
+
+# 5. 配置文件
+vim config/config.yaml
+```
