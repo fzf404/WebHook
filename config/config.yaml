@@ -35,6 +35,6 @@ mail:
   port: 25 # smtp 服务器端口
   password: XXXXXXXXXXXXXXXX # smtp 密码
 
-  from: serverfzf404@163.com # smtp 发送者
+  from: server@163.com # smtp 发送者
   to: # smtp 接收者
-    - nmdfzf404@163.com
+    - client@163.com

@@ -37,7 +37,7 @@ func InitHook() {
 				// Return 403
 				w.WriteHeader(http.StatusForbidden)
 				w.Write([]byte("secret wrong"))
-				log.Printf("🟡 [%s] %s wrong secret : %s", name, platform, secret)
+				log.Printf("🟡 [%s] %s wrong secret: %s", name, platform, secret)
 				return
 			}
 
