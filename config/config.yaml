@@ -1,0 +1,40 @@
+# Host 地址
+host: 0.0.0.0:5050
+
+# WebHooks 配置
+hook:
+  # Hook 标识符
+  demo:
+    url: /webhooks/demo # webhooks 地址
+    secret: fzf404-webhooks-demo # webhooks 密码
+    run: # 执行命令
+      # ping 事件触发
+      ping: echo "pong"
+      # push 事件触发
+      push: bash ./script/demo.sh
+      # star: echo "star" # star 事件触发
+      # pr: echo "pr" # pr 事件触发
+      # tag: echo "tag" # tag 事件触发
+      # fork: echo "fork" # fork 事件触发
+      # issue: echo "issue" # issue 事件触发
+      # comment: echo "comment" # comment 事件触发
+      # release: echo "release" # release 事件触发
+
+  # 不写默认生成注释的信息
+  webhooks:
+    # url: /webhooks
+    # secret: webhooks
+    # run:
+    #   push: ./script/echo.sh
+
+# Mail 配置
+mail:
+  enable: true # 是否开启
+
+  host: smtp.163.com # smtp 服务器地址
+  port: 25 # smtp 服务器端口
+  password: XXXXXXXXXXXXXXXX # smtp 密码
+
+  from: serverfzf404@163.com # smtp 发送者
+  to: # smtp 接收者
+    - nmdfzf404@163.com
