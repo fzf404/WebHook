@@ -48,7 +48,7 @@
 
 ```bash
 # 1. 下载 Release
-wget https://github.com/fzf404/WebHook/releases/download/v1.1.0/webhook.tar.gz
+wget https://github.com/fzf404/WebHook/releases/download/1.1.0/webhook.tar.gz
 
 # 2. 解压
 tar -zxvf webhook.tar.gz
