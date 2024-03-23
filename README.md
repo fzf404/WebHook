@@ -1,10 +1,10 @@
-# WebHooks
+# WebHook
 
-> 通过配置 Yaml 文件的 WebHooks 部署脚本
+> 通过配置 Yaml 文件的 WebHook 部署脚本
 >
 > 支持 Github、Gitee、Coding、Gitlab、Gitea 及 自定义事件
 
-## 什么是 WebHooks
+## 什么是 WebHook
 
 作为一名运维的同学，前端的同学提了一个需求：
 
@@ -36,7 +36,7 @@
 
 > ”能不能每次 commit 以后才能自动部署一次？“
 
-于是你了解到了 WebHooks，它可以根据 git 操作，通过 http 请求触发服务器上配置的事件，你决定使用 WebHooks 来实现自动化部署：
+于是你了解到了 WebHook，它可以根据 git 操作，通过 http 请求触发服务器上配置的事件，你决定使用 WebHook 来实现自动化部署：
 
 > ”欸，这个项目好像不错，那就用这个吧！“
 
@@ -48,20 +48,20 @@
 
 ```bash
 # 1. 下载 Release
-wget https://github.com/fzf404/WebHooks/releases/download/v1.0.0/webhooks.tar.gz
+wget https://github.com/fzf404/WebHook/releases/download/v1.1.0/webhook.tar.gz
 
 # 2. 解压
-tar -zxvf webhooks.tar.gz
+tar -zxvf webhook.tar.gz
 
 # 3. 进入目录
-cd webhooks
+cd webhook
 
 # 4. 运行
-./webhooks
+./webhook
 
 # 5. 配置文件
 vim config/config.yaml
 
 # 6. 使用 pm2 后台运行
-pm2 start webhooks
+pm2 start webhook
 ```

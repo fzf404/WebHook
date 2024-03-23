@@ -1,18 +1,18 @@
 package main
 
 import (
-	"github.com/fzf404/WebHooks/config"
-	"github.com/fzf404/WebHooks/log"
-	"github.com/fzf404/WebHooks/server"
+	"github.com/fzf404/WebHook/config"
+	"github.com/fzf404/WebHook/log"
+	"github.com/fzf404/WebHook/server"
 )
 
 func init() {
-	log.InitLog()       // 初始化日志
-	config.InitConfig() // 初始化配置
-	server.InitMail()   // 初始化邮件
-	server.InitHook()   // 初始化钩子
+	log.InitLog()
+	config.InitConfig()
+	server.InitMail()
+	server.InitHook()
 }
 
 func main() {
-	server.InitServer() // 启动服务
+	server.InitServer()
 }

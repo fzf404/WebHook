@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/fzf404/WebHooks/config"
-	"github.com/fzf404/WebHooks/pkg/hook"
+	"github.com/fzf404/WebHook/config"
+	"github.com/fzf404/WebHook/pkg/hook"
 )
 
 // Init Hook

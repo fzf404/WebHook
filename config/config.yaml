@@ -1,40 +1,40 @@
-# Host 地址
+# Service Address
 host: 0.0.0.0:5050
 
-# WebHooks 配置
+# Hook Config
 hook:
-  # Hook 标识符
+  # Server Name
   demo:
-    url: /webhooks/demo # webhooks 地址
-    secret: fzf404-webhooks-demo # webhooks 密码
-    run: # 执行命令
-      # ping 事件触发
+    url: /demo # path
+    secret: fzf404-webhook-demo #  password
+    run:
+      # Ping Event Command
       ping: echo "pong"
-      # push 事件触发
+      # Push Event Command
       push: bash ./script/demo.sh
-      # star: echo "star" # star 事件触发
-      # pr: echo "pr" # pr 事件触发
-      # tag: echo "tag" # tag 事件触发
-      # fork: echo "fork" # fork 事件触发
-      # issue: echo "issue" # issue 事件触发
-      # comment: echo "comment" # comment 事件触发
-      # release: echo "release" # release 事件触发
+      # star: echo "star" # star event command
+      # pr: echo "pr" # pr event command
+      # tag: echo "tag" # tag event command
+      # fork: echo "fork" # fork event command
+      # issue: echo "issue" # issue event command
+      # comment: echo "comment" # comment event command
+      # release: echo "release" # release event command
 
-  # 不写默认生成注释的信息
-  webhooks:
-    # url: /webhooks
-    # secret: webhooks
+  # Default Settings
+  webhook:
+    # url: /webhook
+    # secret: webhook
     # run:
     #   push: ./script/echo.sh
 
-# Mail 配置
+# Notice Config
 mail:
-  enable: true # 是否开启
+  enable: true
 
-  host: smtp.163.com # smtp 服务器地址
-  port: 25 # smtp 服务器端口
-  password: XXXXXXXXXXXXXXXX # smtp 密码
+  host: smtp.163.com # smtp server address
+  port: 25 # smtp server port
+  password: XXXXXXXXXXXXXXXX # smtp password
 
-  from: server@163.com # smtp 发送者
-  to: # smtp 接收者
+  from: service@163.com # smtp sender
+  to: # smtp receiver
     - client@163.com

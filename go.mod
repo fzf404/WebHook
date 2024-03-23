@@ -1,4 +1,4 @@
-module github.com/fzf404/WebHooks
+module github.com/fzf404/WebHook
 
 go 1.18
 

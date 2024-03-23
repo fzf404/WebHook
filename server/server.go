@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/fzf404/WebHooks/config"
+	"github.com/fzf404/WebHook/config"
 )
 
 // Init Http Server

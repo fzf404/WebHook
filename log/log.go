@@ -10,11 +10,11 @@ import (
 func InitLog() {
 
 	// Init Log Format
-	log.SetPrefix("[WebHooks] ")        // 设置日志前缀
-	log.SetFlags(log.Ldate | log.Ltime) // 设置日志格式
+	log.SetPrefix("[WebHook] ")         // Log Prefix
+	log.SetFlags(log.Ldate | log.Ltime) // Log Timestamp
 
 	// Open Log File
-	file, err := os.OpenFile("./log/webhooks.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile("./log/webhook.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal("🔴 Open Log File Error: \n", err.Error())
 	}

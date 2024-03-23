@@ -3,8 +3,8 @@ package server
 import (
 	"log"
 
-	"github.com/fzf404/WebHooks/config"
-	"github.com/fzf404/WebHooks/pkg/mail"
+	"github.com/fzf404/WebHook/config"
+	"github.com/fzf404/WebHook/pkg/mail"
 )
 
 // Init Mail

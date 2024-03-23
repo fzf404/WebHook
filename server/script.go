@@ -6,15 +6,15 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fzf404/WebHooks/config"
-	"github.com/fzf404/WebHooks/pkg/script"
+	"github.com/fzf404/WebHook/config"
+	"github.com/fzf404/WebHook/pkg/script"
 )
 
 // Execute Script
 func ExecuteScript(name string, platform string, event string, cmd string) {
 
 	// Run Script
-	succ, fail := script.Run(cmd)
+	succ, fail := script.RunScript(cmd)
 	if fail != "" {
 		log.Printf("🔴 [%s] %s %s: %s", name, platform, event, fail)
 	} else {
@@ -25,39 +25,44 @@ func ExecuteScript(name string, platform string, event string, cmd string) {
 	if config.Cfg.Mail.Enable {
 		if fail == "" {
 			// Success Email
-			logs, err := tailLines("./log/webhooks.log", 5)
+			logs, err := tailLines("./log/webhook.log", 4)
 			if err != nil {
-				log.Println("无法获取日志文件的最后5行:", err)
+				log.Println("Read Log Error: ", err)
 			} else {
 				logStr := strings.Join(logs, "\n")
-				SendMail(name, platform, name+" WebHooks Success", logStr)
+				SendMail(name, platform, name+" WebHook Success", logStr)
 			}
 		} else {
-			// Failure Email
-			logs, err := tailLines("./log/webhooks.log", 2)
+			// Fail Email
+			logs, err := tailLines("./log/webhook.log", 8)
 			if err != nil {
-				log.Println("无法获取日志文件的最后2行:", err)
+				log.Println("Read Log Error: ", err)
 			} else {
 				logStr := strings.Join(logs, "\n")
-				SendMail(name, platform, name+" WebHooks Failure", logStr)
+				SendMail(name, platform, name+" WebHook Failure", logStr)
 			}
-			//SendMail(name, platform, name+" WebHooks Failure", last)
 		}
 	}
 }
 
-// 从日志文件获取指定行数的最后几行
+// Read Log Message
 func tailLines(filePath string, numLines int) ([]string, error) {
+
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
 	}
+
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
+
 	var lines []string
+
 	for scanner.Scan() {
+
 		lines = append(lines, scanner.Text())
+
 		if len(lines) > numLines {
 			lines = lines[1:]
 		}

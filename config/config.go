@@ -1,8 +1,8 @@
 package config
 
 import (
-	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/go-playground/validator/v10"
 	"gopkg.in/yaml.v2"
@@ -41,7 +41,7 @@ var Cfg Config
 func InitConfig() {
 
 	// Read Config File
-	file, err := ioutil.ReadFile("./config/config.yaml")
+	file, err := os.ReadFile("./config/config.yaml")
 	if err != nil {
 		log.Fatal("🔴 read config error: \n", err.Error())
 	}

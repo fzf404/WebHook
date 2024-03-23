@@ -1,12 +1,12 @@
 #!/bin/bash
 
-mkdir -p webhooks/config webhooks/log webhooks/script
+mkdir -p webhook/config webhook/log webhook/script
 
-cp ./config/config.yaml webhooks/config
-cp ./script/*.sh webhooks/script
+cp ./config/config.yaml webhook/config
+cp ./script/*.sh webhook/script
 
-go build -o webhooks/webhooks
+go build -o webhook/webhook
 
-tar -zcvf webhooks.tar.gz webhooks
+tar -zcvf webhook.tar.gz webhook
 
-rm -rf webhooks
+rm -rf webhook
